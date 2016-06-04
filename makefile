@@ -1,7 +1,8 @@
 FLAGS = -O2 -std=gnu++1z
 SDL = -I/usr/local/include -lSDL2
 
-all: clean build run
+all: build run
+
 clean:
 	rm *.exe
 

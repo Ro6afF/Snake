@@ -65,33 +65,9 @@ int main()
 		return 1;
 	}
 
-	std::string body_part = "./body_part.bmp";
-	std::string food_image = "./food.bmp";
-
-	SDL_Surface *bmp = SDL_LoadBMP(body_part.c_str());
-	if (bmp == nullptr)
-	{
-		SDL_DestroyRenderer(ren);
-		SDL_DestroyWindow(win);
-		std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
-		SDL_Quit();
-		return 1;
-	}
-
-	SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, bmp);
-	SDL_FreeSurface(bmp);
-	bmp = SDL_LoadBMP(food_image.c_str());
-	SDL_Texture *tex2 = SDL_CreateTextureFromSurface(ren, bmp);
-	if (tex == nullptr)
-	{
-		SDL_DestroyRenderer(ren);
-		SDL_DestroyWindow(win);
-		std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
-		SDL_Quit();
-		return 1;
-	}
 	bool runs = true;
 	bool canImove;
+
 	while(runs)
 	{
 		canImove = true;
@@ -127,14 +103,19 @@ int main()
 		}
 		tail[0].x += dX;
 		tail[0].y += dY;
+		SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
 		SDL_RenderClear(ren);
+		SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
 		for(size_t i = 0; i < food.size(); i++)
 		{
-			SDL_RenderCopy(ren, tex2, nullptr, &food[i]);
+			SDL_RenderFillRect(ren, &food[i]);
 		}
 		for(size_t i = 0; i < tail.size(); i++)
 		{
-			SDL_RenderCopy(ren, tex, nullptr, &tail[i]);
+			SDL_SetRenderDrawColor(ren, 0, 255, 0, 255);
+			SDL_RenderFillRect(ren, &tail[i]);
+			SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+			SDL_RenderDrawRect(ren, &tail[i]);
 		}
 
 		SDL_RenderPresent(ren);
@@ -193,7 +174,6 @@ int main()
 		}
 	}
 
-	SDL_DestroyTexture(tex);
 	SDL_DestroyRenderer(ren);
 	SDL_DestroyWindow(win);
 	SDL_Quit();
